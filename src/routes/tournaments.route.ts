@@ -9,23 +9,23 @@ const {
 const roleCheckMiddleware = require("../middleware/roleCheck.middleware");
 const formErrorHandlerMiddleware = require("../middleware/formErrorHandler.middleware");
 
-const formErrorMessage = "Invalid language format";
+const formErrorMessage = "Invalid tournament format";
 
 router.get("/:id", controller.getOne);
-// router.get("/", controller.get);
-// router.post("/",
-// 	roleCheckMiddleware([CAN_EDIT_LANGS]),
-// 	controller.createValidators,
-// 	formErrorHandlerMiddleware(formErrorMessage),
-// 	controller.create,
-// );
-// router.put("/:id",
-// 	roleCheckMiddleware([CAN_EDIT_LANGS]),
-// 	controller.editValidators,
-// 	formErrorHandlerMiddleware(formErrorMessage),
-// 	controller.update,
-// );
 router.delete("/:id", roleCheckMiddleware([CAN_EDIT_SETTINGS]), controller.remove);
+router.get("/", controller.get);
+router.post("/",
+	roleCheckMiddleware([CAN_EDIT_SETTINGS]),
+	controller.createValidators,
+	formErrorHandlerMiddleware(formErrorMessage),
+	controller.create,
+);
+router.put("/:id",
+	roleCheckMiddleware([CAN_EDIT_SETTINGS]),
+	controller.editValidators,
+	formErrorHandlerMiddleware(formErrorMessage),
+	controller.update,
+);
 
 module.exports = router;
 

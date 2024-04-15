@@ -5,36 +5,34 @@ const {
 	getSelectQuery,
 	getInsertInto,
 	getUpdate,
+	removeById,
 } = require("../utils/service.util");
 
-const tableName = "roles";
-
-export interface RolesServiceType extends SystemDateTypes, SystemIdType {
+export interface PhasesServiceType extends SystemDateTypes, SystemIdType {
 	name: string,
-	can_edit_settings: boolean,
-	can_edit_games: boolean,
+	description: string,
 }
 
-const getOneById = async (id: number): Promise<RolesServiceType | null> => {
-	const { query: selectQuery, values: selectQueryValues } = getSelectQuery({
-		tableName,
-		filter: {
-			id: String(id),
-		},
-	});
-	const data: { rows?: RolesServiceType[] } = await db.query(selectQuery,
-		selectQueryValues,
-	);
+const tableName = "phases";
 
-	return data.rows?.[0] || null;
-};
-
-const getMany = async (queryParams: GetManyParams): Promise<RolesServiceType[]> => {
+const getOne = async (queryParams: GetManyParams): Promise<PhasesServiceType> => {
 	const { query: selectQuery, values: selectQueryValues } = getSelectQuery({
 		tableName,
 		...queryParams,
 	});
-	const data: { rows?: RolesServiceType[] } = await db.query(selectQuery,
+	const data: { rows?: PhasesServiceType[] } = await db.query(selectQuery,
+		selectQueryValues,
+	);
+
+	return data.rows?.[0];
+};
+
+const getMany = async (queryParams: GetManyParams): Promise<PhasesServiceType[]> => {
+	const { query: selectQuery, values: selectQueryValues } = getSelectQuery({
+		tableName,
+		...queryParams,
+	});
+	const data: { rows?: PhasesServiceType[] } = await db.query(selectQuery,
 		selectQueryValues,
 	);
 
@@ -48,10 +46,10 @@ const create = async (body: BodyPayload) => {
 	});
 	const result: { rowCount: number } = await db.query(query, values);
 
-	let message = `Error creating in ${tableName}`;
+	let message = "Error creating a phase";
 
 	if (result.rowCount) {
-		message = "Role created successfully";
+		message = "Phase created successfully";
 	}
 
 	return { message };
@@ -66,32 +64,29 @@ const update = async (id: number, body: BodyPayload) => {
 
 	const result: { rowCount: number } = await db.query(query, values);
 
-	let message = `Error creating in ${tableName}`;
+	let message = "Error updating a phase";
 
 	if (result.rowCount) {
-		message = "Role updated successfully";
+		message = "Phase updated successfully";
 	}
 
 	return { message };
 };
 
 const remove = async (id: number) => {
-	const result: { rowCount: number } = await db.query(
-		`DELETE FROM ${tableName} WHERE id=$1`,
-		[id],
-	);
+	const result: { rowCount: number } = await removeById(id, tableName);
 
-	let message = `Error deleting ${tableName}`;
+	let message = "Error deleting a phase";
 
 	if (result.rowCount) {
-		message = "Role deleted successfully";
+		message = "Phase deleted successfully";
 	}
 
 	return { message };
 };
 
 module.exports = {
-	getOneById,
+	getOne,
 	getMany,
 	create,
 	update,

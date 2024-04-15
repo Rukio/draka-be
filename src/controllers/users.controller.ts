@@ -1,5 +1,5 @@
-import {UsersServiceType} from "../services/users.service";
-import {RolesServiceType} from "../services/roles.service";
+import { UsersServiceType } from "../services/users.service";
+import { RolesServiceType } from "../services/roles.service";
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
@@ -108,7 +108,7 @@ const registration = async (req, res, next) => {
 			return next(error.badRequest("User with this email already exist"));
 		}
 
-		const userRoles = await rolesService.getMany({ filter: { name: "user" }});
+		const userRoles = await rolesService.getMany({ filter: { name: "user" } });
 		const userRole = userRoles?.[0];
 		const userRoleId = userRole?.id;
 
@@ -123,7 +123,7 @@ const registration = async (req, res, next) => {
 			email,
 			password: passwordHash,
 			role_id: userRoleId,
-			regdate: Date.now(),
+			reg_date: Date.now(),
 		});
 		const newUser = await service.getOneBy("email", email);
 
@@ -156,7 +156,7 @@ const getProfile = async (req, res, next) => {
 			email: userActual.email,
 			country: userActual.country,
 			img: userActual.img,
-			regdate: userActual.regdate,
+			reg_date: userActual.reg_date,
 		});
 	} catch (err) {
 		console.log("Error while getting a user profile", err);
@@ -213,4 +213,4 @@ module.exports = {
 	userEditValidators,
 };
 
-export {};
+export { };

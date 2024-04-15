@@ -1,4 +1,4 @@
-import {BodyPayload, GetManyParams, MessageResponse, SystemDateTypes, SystemIdType} from "./commonTypes.service";
+import { BodyPayload, GetManyParams, MessageResponse, SystemDateTypes, SystemIdType } from "./commonTypes.service";
 
 const db = require("./db.service");
 const {
@@ -7,22 +7,17 @@ const {
 	getUpdate,
 } = require("../utils/service.util");
 
-export interface UsersServiceRawType {
+export interface UsersServiceType extends SystemDateTypes, SystemIdType {
 	name: string,
 	email: string,
+	password: string,
+	phone: string,
+	vk_url: string,
 	country: string,
 	img: string,
-	regdate: number,
+	reg_date: number,
 	role_id: number,
-}
-
-export interface UsersServiceType extends SystemDateTypes, SystemIdType {
-  name: string,
-	email: string,
-	country: string,
-  img: string,
-	regdate: number,
-	role_id: number,
+	setting_id: number,
 }
 
 const tableName = "users";
@@ -70,7 +65,7 @@ const create = async (body: BodyPayload): MessageResponse<{ id: string }> => {
 
 	const resultRows = result.rows;
 
-	return { message, data: { id: resultRows?.[0]?.id} };
+	return { message, data: { id: resultRows?.[0]?.id } };
 };
 
 const update = async (id: number, body: BodyPayload): MessageResponse => {
@@ -114,4 +109,4 @@ module.exports = {
 	remove,
 };
 
-export {};
+export { };

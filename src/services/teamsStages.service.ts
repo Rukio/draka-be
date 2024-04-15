@@ -5,36 +5,31 @@ const {
 	getSelectQuery,
 	getInsertInto,
 	getUpdate,
+	removeById,
 } = require("../utils/service.util");
 
-const tableName = "roles";
+export interface TeamsStagesServiceType extends SystemDateTypes, SystemIdType { }
 
-export interface RolesServiceType extends SystemDateTypes, SystemIdType {
-	name: string,
-	can_edit_settings: boolean,
-	can_edit_games: boolean,
-}
+const tableName = "user_race";
 
-const getOneById = async (id: number): Promise<RolesServiceType | null> => {
-	const { query: selectQuery, values: selectQueryValues } = getSelectQuery({
-		tableName,
-		filter: {
-			id: String(id),
-		},
-	});
-	const data: { rows?: RolesServiceType[] } = await db.query(selectQuery,
-		selectQueryValues,
-	);
-
-	return data.rows?.[0] || null;
-};
-
-const getMany = async (queryParams: GetManyParams): Promise<RolesServiceType[]> => {
+const getOne = async (queryParams: GetManyParams): Promise<TeamsStagesServiceType> => {
 	const { query: selectQuery, values: selectQueryValues } = getSelectQuery({
 		tableName,
 		...queryParams,
 	});
-	const data: { rows?: RolesServiceType[] } = await db.query(selectQuery,
+	const data: { rows?: TeamsStagesServiceType[] } = await db.query(selectQuery,
+		selectQueryValues,
+	);
+
+	return data.rows?.[0];
+};
+
+const getMany = async (queryParams: GetManyParams): Promise<TeamsStagesServiceType[]> => {
+	const { query: selectQuery, values: selectQueryValues } = getSelectQuery({
+		tableName,
+		...queryParams,
+	});
+	const data: { rows?: TeamsStagesServiceType[] } = await db.query(selectQuery,
 		selectQueryValues,
 	);
 
@@ -48,10 +43,10 @@ const create = async (body: BodyPayload) => {
 	});
 	const result: { rowCount: number } = await db.query(query, values);
 
-	let message = `Error creating in ${tableName}`;
+	let message = "Error creating a team stage";
 
 	if (result.rowCount) {
-		message = "Role created successfully";
+		message = "Team Stage created successfully";
 	}
 
 	return { message };
@@ -66,32 +61,29 @@ const update = async (id: number, body: BodyPayload) => {
 
 	const result: { rowCount: number } = await db.query(query, values);
 
-	let message = `Error creating in ${tableName}`;
+	let message = "Error updating a team stage";
 
 	if (result.rowCount) {
-		message = "Role updated successfully";
+		message = "Team Stage updated successfully";
 	}
 
 	return { message };
 };
 
 const remove = async (id: number) => {
-	const result: { rowCount: number } = await db.query(
-		`DELETE FROM ${tableName} WHERE id=$1`,
-		[id],
-	);
+	const result: { rowCount: number } = await removeById(id, tableName);
 
-	let message = `Error deleting ${tableName}`;
+	let message = "Error deleting a team stage";
 
 	if (result.rowCount) {
-		message = "Role deleted successfully";
+		message = "Team Stage deleted successfully";
 	}
 
 	return { message };
 };
 
 module.exports = {
-	getOneById,
+	getOne,
 	getMany,
 	create,
 	update,

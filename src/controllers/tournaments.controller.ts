@@ -26,9 +26,11 @@ const createValidators = [
 
 const getOne = async (req, res, next) => {
 	try {
-		res.json(await service.getOne(getControllerToServiceFilter(req.query)));
+		const tournament = await service.getOne(getControllerToServiceFilter(req.query));
+
+		res.json(tournament);
 	} catch (err) {
-		console.log("Error while getting langs", err);
+		console.log("Error while getting tournaments", err);
 		next(err);
 	}
 };

@@ -3,8 +3,8 @@ import { BodyPayload, GetManyParams, SystemDateTypes, SystemIdType } from "./com
 const db = require("./db.service");
 const {
 	getSelectQuery,
-	// getInsertInto,
-	// getUpdate,
+	getInsertInto,
+	getUpdate,
 	removeById,
 } = require("../utils/service.util");
 
@@ -27,59 +27,59 @@ const getOne = async (queryParams: GetManyParams): Promise<TournamentsServiceTyp
 	return data.rows?.[0];
 };
 
-// const getMany = async (queryParams: GetManyParams): Promise<TournamentsServiceType[]> => {
-// 	const { query: selectQuery, values: selectQueryValues } = getSelectQuery({
-// 		tableName,
-// 		...queryParams,
-// 	});
-// 	const data: { rows?: TournamentsServiceType[] } = await db.query(selectQuery,
-// 		selectQueryValues,
-// 	);
+const getMany = async (queryParams: GetManyParams): Promise<TournamentsServiceType[]> => {
+	const { query: selectQuery, values: selectQueryValues } = getSelectQuery({
+		tableName,
+		...queryParams,
+	});
+	const data: { rows?: TournamentsServiceType[] } = await db.query(selectQuery,
+		selectQueryValues,
+	);
 
-// 	return data.rows;
-// };
+	return data.rows;
+};
 
-// const create = async (body: BodyPayload) => {
-// 	const { query, values } = getInsertInto({
-// 		tableName,
-// 		data: body,
-// 	});
-// 	const result: { rowCount: number } = await db.query(query, values);
+const create = async (body: BodyPayload) => {
+	const { query, values } = getInsertInto({
+		tableName,
+		data: body,
+	});
+	const result: { rowCount: number } = await db.query(query, values);
 
-// 	let message = "Error creating a lang";
+	let message = "Error creating a tournament";
 
-// 	if (result.rowCount) {
-// 		message = "Lang created successfully";
-// 	}
+	if (result.rowCount) {
+		message = "Tournament created successfully";
+	}
 
-// 	return { message };
-// };
+	return { message };
+};
 
-// const update = async (id: number, body: BodyPayload) => {
-// 	const { query, values } = getUpdate({
-// 		tableName,
-// 		id,
-// 		data: body,
-// 	});
+const update = async (id: number, body: BodyPayload) => {
+	const { query, values } = getUpdate({
+		tableName,
+		id,
+		data: body,
+	});
 
-// 	const result: { rowCount: number } = await db.query(query, values);
+	const result: { rowCount: number } = await db.query(query, values);
 
-// 	let message = "Error updating a lang";
+	let message = "Error updating a tournament";
 
-// 	if (result.rowCount) {
-// 		message = "Lang updated successfully";
-// 	}
+	if (result.rowCount) {
+		message = "Tournament updated successfully";
+	}
 
-// 	return { message };
-// };
+	return { message };
+};
 
 const remove = async (id: number) => {
 	const result: { rowCount: number } = await removeById(id, tableName);
 
-	let message = "Error deleting a lang";
+	let message = "Error deleting a tournament";
 
 	if (result.rowCount) {
-		message = "Lang deleted successfully";
+		message = "Tournament deleted successfully";
 	}
 
 	return { message };
@@ -87,8 +87,8 @@ const remove = async (id: number) => {
 
 module.exports = {
 	getOne,
-	// getMany,
-	// create,
-	// update,
+	getMany,
+	create,
+	update,
 	remove,
 };

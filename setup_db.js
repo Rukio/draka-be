@@ -124,7 +124,7 @@ console.log(pool);
                 country: VARCHAR(100),
                 setting_id: BIGINT,
                 role_id: BIGINT,
-                regdate NUMERIC(30) NOT NULL,
+                reg_date NUMERIC(30) NOT NULL,
                 created_at NUMERIC(30) NOT NULL,
                 updated_at NUMERIC(30),
                 CONSTRAINT role_id_fk FOREIGN KEY(role_id) REFERENCES roles(id),
@@ -138,6 +138,7 @@ console.log(pool);
                 id BIGSERIAL PRIMARY KEY,
                 name VARCHAR(30) NOT NULL,
                 can_edit_settings BOOLEAN NOT NULL,
+                can_edit_games BOOLEAN NOT NULL,
                 created_at NUMERIC(30) NOT NULL,
                 updated_at NUMERIC(30),
                 CONSTRAINT unique_roles_name UNIQUE (name)
