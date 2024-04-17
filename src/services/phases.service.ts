@@ -44,7 +44,7 @@ const create = async (body: BodyPayload) => {
 		tableName,
 		data: body,
 	});
-	const result: { rowCount: number } = await db.query(query, values);
+	const result: { rowCount: number, rows: { id: string }[] } = await db.query(query, values);
 
 	let message = "Error creating a phase";
 
@@ -52,7 +52,14 @@ const create = async (body: BodyPayload) => {
 		message = "Phase created successfully";
 	}
 
-	return { message };
+	const resultRows = result.rows;
+
+	return {
+		message,
+		data: {
+			id: resultRows?.[0]?.id,
+		},
+	};
 };
 
 const update = async (id: number, body: BodyPayload) => {

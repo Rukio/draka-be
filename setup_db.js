@@ -49,9 +49,21 @@ console.log(pool);
                 name VARCHAR(30) NOT NULL,
                 created_at NUMERIC(30) NOT NULL,
                 updated_at NUMERIC(30),
-                CONSTRAINT unique_stages_name UNIQUE (name),
                 CONSTRAINT tournament_id_fk FOREIGN KEY(tournament_id) REFERENCES tournaments(id),
                 CONSTRAINT phase_id_fk FOREIGN KEY(phase_id) REFERENCES phases(id)
+            )
+
+            CREATE TABLE tours (
+                id BIGSERIAL PRIMARY KEY,
+                name: VARCHAR(30) NOT NULL,
+                position: NUMERIC NOT NULL,
+                stage_id: VARCHAR(30) NOT NULL,
+                tournament_id: VARCHAR(30) NOT NULL,
+                created_at NUMERIC(30) NOT NULL,
+                updated_at NUMERIC(30),
+                CONSTRAINT unique_stages_name UNIQUE (name),
+                CONSTRAINT stage_id_fk FOREIGN KEY(stage_id) REFERENCES stages(id),
+                CONSTRAINT tournament_id_fk FOREIGN KEY(tournament_id) REFERENCES tournaments(id)
             )
 
             CREATE TABLE games (
@@ -142,16 +154,6 @@ console.log(pool);
                 created_at NUMERIC(30) NOT NULL,
                 updated_at NUMERIC(30),
                 CONSTRAINT unique_roles_name UNIQUE (name)
-            );
-            
-            CREATE TABLE user_race (
-                id BIGSERIAL PRIMARY KEY,
-                user_id BIGINT,
-                race_id BIGINT,
-                created_at NUMERIC(30) NOT NULL,
-                updated_at NUMERIC(30),
-                CONSTRAINT user_id_fk FOREIGN KEY(user_id) REFERENCES users(id),
-                CONSTRAINT race_id_fk FOREIGN KEY(race_id) REFERENCES races(id)
             );
         `);
     } catch (err) {

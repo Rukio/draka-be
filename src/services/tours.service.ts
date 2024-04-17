@@ -8,31 +8,31 @@ const {
 	removeById,
 } = require("../utils/service.util");
 
-export interface TournamentsServiceType extends SystemDateTypes, SystemIdType {
+export interface ToursServiceType extends SystemDateTypes, SystemIdType {
 	name: string,
-	description: string,
+	info: string,
 }
 
-const tableName = "tournaments";
+const tableName = "tours";
 
-const getOne = async (queryParams: GetManyParams): Promise<TournamentsServiceType> => {
+const getOne = async (queryParams: GetManyParams): Promise<ToursServiceType> => {
 	const { query: selectQuery, values: selectQueryValues } = getSelectQuery({
 		tableName,
 		...queryParams,
 	});
-	const data: { rows?: TournamentsServiceType[] } = await db.query(selectQuery,
+	const data: { rows?: ToursServiceType[] } = await db.query(selectQuery,
 		selectQueryValues,
 	);
 
 	return data.rows?.[0];
 };
 
-const getMany = async (queryParams: GetManyParams): Promise<TournamentsServiceType[]> => {
+const getMany = async (queryParams: GetManyParams): Promise<ToursServiceType[]> => {
 	const { query: selectQuery, values: selectQueryValues } = getSelectQuery({
 		tableName,
 		...queryParams,
 	});
-	const data: { rows?: TournamentsServiceType[] } = await db.query(selectQuery,
+	const data: { rows?: ToursServiceType[] } = await db.query(selectQuery,
 		selectQueryValues,
 	);
 
@@ -44,22 +44,15 @@ const create = async (body: BodyPayload) => {
 		tableName,
 		data: body,
 	});
-	const result: { rowCount: number, rows: { id: string }[] } = await db.query(query, values);
+	const result: { rowCount: number } = await db.query(query, values);
 
-	let message = "Error creating a tournament";
+	let message = "Error creating a tour";
 
 	if (result.rowCount) {
-		message = "Tournament created successfully";
+		message = "Tour created successfully";
 	}
 
-	const resultRows = result.rows;
-
-	return {
-		message,
-		data: {
-			id: resultRows?.[0]?.id,
-		},
-	};
+	return { message };
 };
 
 const update = async (id: number, body: BodyPayload) => {
@@ -71,10 +64,10 @@ const update = async (id: number, body: BodyPayload) => {
 
 	const result: { rowCount: number } = await db.query(query, values);
 
-	let message = "Error updating a tournament";
+	let message = "Error updating a tour";
 
 	if (result.rowCount) {
-		message = "Tournament updated successfully";
+		message = "Tour updated successfully";
 	}
 
 	return { message };
@@ -83,10 +76,10 @@ const update = async (id: number, body: BodyPayload) => {
 const remove = async (id: number) => {
 	const result: { rowCount: number } = await removeById(id, tableName);
 
-	let message = "Error deleting a tournament";
+	let message = "Error deleting a tour";
 
 	if (result.rowCount) {
-		message = "Tournament deleted successfully";
+		message = "Tour deleted successfully";
 	}
 
 	return { message };
