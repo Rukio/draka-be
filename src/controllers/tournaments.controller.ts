@@ -51,143 +51,145 @@ const get = async (req, res, next) => {
 
 const create = async (req, res, next) => {
 	try {
-		const body = req.body;
-		const existingTrounament = await service.getOne(getControllerToServiceFilter({ name: body.name }));
+		// const body = req.body;
+		// const existingTrounament = await service.getOne(getControllerToServiceFilter({ name: body.name }));
 
-		if (existingTrounament) {
-			return next(error.badRequest("Tournament with this name already exists"))
-		}
+		// if (existingTrounament) {
+		// 	return next(error.badRequest("Tournament with this name already exists"))
+		// }
 
-		const tournament = {
-			name: body.name,
-			description: body.description,
-		};
-		const phases = [
-			{
-				name: 'Элиминейшен',
-				type: 1,
-				stages: [
-					{
-						name: 'Верхняя сетка',
-						tours: [],
-					}
-				],
-			}
-		];
-
-		const upperStageTours = [];
-		const teams = body.teams;
-		const games = [];
-		let gameIndex = 0;
-
-		teams.forEach((team, i) => {
-			if (i !== 0 && !(i % 2)) {
-				gameIndex++;
-			}
-
-			if (!games[gameIndex]) {
-				games[gameIndex] = {
-					description: '',
-					teams: [],
-				};
-			}
-
-			games[gameIndex].teams.push(team);
-		});
-
-		// const playersLocal = [];
-		// const teamsLocal = body.teams;
-		// const type = body.type;
-		// const tournament = await service.create({
+		// const tournament = {
 		// 	name: body.name,
-		// 	description: body.description
-		// })
-		// const tournamentId = tournament.data.id;
+		// 	description: body.description,
+		// };
+		// const phases = [
+		// 	{
+		// 		name: 'Элиминейшен',
+		// 		type: 1,
+		// 		stages: [
+		// 			{
+		// 				name: 'Верхняя сетка',
+		// 				tours: [],
+		// 			}
+		// 		],
+		// 	}
+		// ];
 
-		// if (type === 1) {
-		// 	const phase = await phaseService.create({
-		// 		name: "Double Elimination",
-		// 		description: "",
-		// 		tournament_id: tournamentId,
-		// 	});
+		// const upperStageTours = [];
+		// const teams = body.teams;
+		// const games = [];
+		// let gameIndex = 0;
 
-		// 	const phaseId = phase.data.id;
+		// teams.forEach((team, i) => {
+		// 	if (i !== 0 && !(i % 2)) {
+		// 		gameIndex++;
+		// 	}
 
-		// 	const stageUpper = await stageService.create({
-		// 		name: "Верхняя сетка",
-		// 		tournament_id: tournamentId,
-		// 		phase_id: phaseId,
-		// 	});
+		// 	if (!games[gameIndex]) {
+		// 		games[gameIndex] = {
+		// 			description: '',
+		// 			teams: [],
+		// 		};
+		// 	}
 
-		// 	const stageBottom = await stageService.create({
-		// 		name: "Нижняя сетка",
-		// 		tournament_id: tournamentId,
-		// 		phase_id: phaseId,
-		// 	});
-
-		// 	const teams = await Promise.all(
-		// 		teamsLocal.map(teamLocal => teamService.create({
-		// 			score: null,
-		// 			name: teamLocal.name,
-		// 			tournament_id: tournament.id,
-		// 			img: teamLocal.img,
-		// 		}))
-		// 	);
-
-		// 	teamsLocal.forEach(teamLocal => {
-		// 		teamLocal.players.forEach(playerLocal => playersLocal.push({
-		// 			name: playerLocal.name,
-		// 			description: playerLocal.description,
-		// 			url: playerLocal.url,
-		// 			img: playerLocal.img,
-		// 			team_id: teams.find(team => team.name === teamLocal.name)?.id,
-		// 			tournament_id: tournament.id,
-		// 		}))
-		// 	});
-
-		// 	const players = await Promise.all(
-		// 		playersLocal.map(playerLocal => playerServcie.create(playerLocal))
-		// 	);
-
-		// 	const games = [];
-		// 	let gameIndex = 0;
-
-		// 	teams.forEach((team, i) => {
-		// 		if (i !== 0 && !(i % 2)) {
-		// 			gameIndex++;
-		// 		}
-
-		// 		if (!games[gameIndex]) {
-		// 			games[gameIndex] = {
-		// 				tournament_id: tournamentId,
-		// 				phase_id: phaseId,
-		// 				stage_id: stageUpper.id,
-		// 				description: '',
-		// 				teams: [],
-		// 			};
-		// 		}
-
-		// 		games[gameIndex].teams.push(team);
-		// 	});
-
-		// const tour = await tourService.create({
-		// 	name: "",
+		// 	games[gameIndex].teams.push(team);
 		// });
 
-		// const game = await 
+		// --------------
 
-		// const teams = await Promise.all([
-		// 	{
+		const playersLocal = [];
+		const teamsLocal = body.teams;
+		const type = body.type;
+		const tournament = await service.create({
+			name: body.name,
+			description: body.description
+		})
+		const tournamentId = tournament.data.id;
 
-		// 	}
-		// ]);
-	}
+		if (type === 1) {
+			const phase = await phaseService.create({
+				name: "Double Elimination",
+				description: "",
+				tournament_id: tournamentId,
+			});
+
+			const phaseId = phase.data.id;
+
+			const stageUpper = await stageService.create({
+				name: "Верхняя сетка",
+				tournament_id: tournamentId,
+				phase_id: phaseId,
+			});
+
+			const stageBottom = await stageService.create({
+				name: "Нижняя сетка",
+				tournament_id: tournamentId,
+				phase_id: phaseId,
+			});
+
+			const teams = await Promise.all(
+				teamsLocal.map(teamLocal => teamService.create({
+					score: null,
+					name: teamLocal.name,
+					tournament_id: tournament.id,
+					img: teamLocal.img,
+				}))
+			);
+
+			teamsLocal.forEach(teamLocal => {
+				teamLocal.players.forEach(playerLocal => playersLocal.push({
+					name: playerLocal.name,
+					description: playerLocal.description,
+					url: playerLocal.url,
+					img: playerLocal.img,
+					team_id: teams.find(team => team.name === teamLocal.name)?.id,
+					tournament_id: tournament.id,
+				}))
+			});
+
+			const players = await Promise.all(
+				playersLocal.map(playerLocal => playerServcie.create(playerLocal))
+			);
+
+			const games = [];
+			let gameIndex = 0;
+
+			teams.forEach((team, i) => {
+				if (i !== 0 && !(i % 2)) {
+					gameIndex++;
+				}
+
+				if (!games[gameIndex]) {
+					games[gameIndex] = {
+						tournament_id: tournamentId,
+						phase_id: phaseId,
+						stage_id: stageUpper.id,
+						description: '',
+						teams: [],
+					};
+				}
+
+				games[gameIndex].teams.push(team);
+			});
+
+			const tour = await tourService.create({
+				name: "",
+			});
+
+			const game = await 
+
+		const teams = await Promise.all([
+				{
+
+				}
+			]);
+		}
 
 		res.json(await service.create(req.body));
-} catch (err) {
-	console.log("Error while creating a tournament", err);
-	next(err);
-}
+	} catch (err) {
+		console.log("Error while creating a tournament", err);
+		next(err);
+	}
 };
 
 const update = async (req, res, next) => {

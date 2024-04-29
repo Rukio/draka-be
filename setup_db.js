@@ -27,10 +27,110 @@ console.log(pool);
                 id BIGSERIAL PRIMARY KEY,
                 name VARCHAR(30) NOT NULL,
                 description VARCHAR(20000),
-                data VARCHAR (99999),
                 created_at NUMERIC(30) NOT NULL,
                 updated_at NUMERIC(30),
                 CONSTRAINT unique_tournaments_name UNIQUE (name)
+            )
+
+            CREATE TABLE phases (
+                id BIGSERIAL PRIMARY KEY,
+                name VARCHAR(30) NOT NULL,
+                description VARCHAR(1000),
+                tournament_id BIGINT,
+                created_at NUMERIC(30) NOT NULL,
+                updated_at NUMERIC(30),
+                CONSTRAINT tournament_id_fk FOREIGN KEY(tournament_id) REFERENCES tournaments(id)
+            )
+
+            CREATE TABLE stages (
+                id BIGSERIAL PRIMARY KEY,
+                phase_id BIGINT,
+                tournament_id BIGINT,
+                name VARCHAR(30) NOT NULL,
+                created_at NUMERIC(30) NOT NULL,
+                updated_at NUMERIC(30),
+                CONSTRAINT tournament_id_fk FOREIGN KEY(tournament_id) REFERENCES tournaments(id),
+                CONSTRAINT phase_id_fk FOREIGN KEY(phase_id) REFERENCES phases(id)
+            )
+
+            CREATE TABLE tours (
+                id BIGSERIAL PRIMARY KEY,
+                name: VARCHAR(30) NOT NULL,
+                position: NUMERIC NOT NULL,
+                stage_id: VARCHAR(30) NOT NULL,
+                tournament_id: VARCHAR(30) NOT NULL,
+                created_at NUMERIC(30) NOT NULL,
+                updated_at NUMERIC(30),
+                CONSTRAINT unique_stages_name UNIQUE (name),
+                CONSTRAINT stage_id_fk FOREIGN KEY(stage_id) REFERENCES stages(id),
+                CONSTRAINT tournament_id_fk FOREIGN KEY(tournament_id) REFERENCES tournaments(id)
+            )
+
+            CREATE TABLE games (
+                id BIGSERIAL PRIMARY KEY,
+                tournament_id BIGINT,
+                phase_id BIGINT,
+                stage_id BIGINT,
+                description VARCHAR(1000),
+                created_at NUMERIC(30) NOT NULL,
+                updated_at NUMERIC(30),
+                CONSTRAINT tournament_id_fk FOREIGN KEY(tournament_id) REFERENCES tournaments(id),
+                CONSTRAINT phase_id_fk FOREIGN KEY(phase_id) REFERENCES phases(id),
+                CONSTRAINT stage_id_fk FOREIGN KEY(stage_id) REFERENCES stages(id),
+            )
+
+            CREATE TABLE score (
+                id BIGSERIAL PRIMARY KEY,
+                game_id BIGINT,
+                team_id BIGINT,
+                score SMALLINT,
+                CONSTRAINT game_id_fk FOREIGN KEY(game_id) REFERENCES games(id),
+                CONSTRAINT team_id_fk FOREIGN KEY(team_id) REFERENCES teams(id)
+            )
+
+            CREATE TABLE teams (
+                id BIGSERIAL PRIMARY KEY,
+                name: VARCHAR(30),
+                tournament_id BIGINT,
+                img VARCHAR(1000),
+                created_at NUMERIC(30) NOT NULL,
+                updated_at NUMERIC(30),
+                CONSTRAINT tournament_id_fk FOREIGN KEY(tournament_id) REFERENCES tournaments(id),
+            )
+
+            CREATE TABLE team_stage (
+                id BIGSERIAL PRIMARY KEY,
+                team_id BIGINT,
+                stage_id BIGINT,
+                created_at NUMERIC(30) NOT NULL,
+                updated_at NUMERIC(30),
+                CONSTRAINT team_id_fk FOREIGN KEY(team_id) REFERENCES teams(id),
+                CONSTRAINT stage_id_fk FOREIGN KEY(stage_id) REFERENCES stages(id)
+            )
+
+            CREATE TABLE team_game (
+                id BIGSERIAL PRIMARY KEY,
+                team_id BIGINT,
+                game_id BIGINT,
+                created_at NUMERIC(30) NOT NULL,
+                updated_at NUMERIC(30),
+                CONSTRAINT team_id_fk FOREIGN KEY(team_id) REFERENCES teams(id),
+                CONSTRAINT game_id_fk FOREIGN KEY(game_id) REFERENCES games(id)
+            )
+
+            CREATE TABLE players (
+                id BIGSERIAL PRIMARY KEY,
+                name VARCHAR(30) NOT NULL,
+                description VARCHAR(1000),
+                url: VARCHAR(1000),
+                img VARCHAR(1000),
+                team_id BIGINT,
+                tournament_id BIGINT,
+                created_at NUMERIC(30) NOT NULL,
+                updated_at NUMERIC(30),
+                CONSTRAINT tournament_id_fk FOREIGN KEY(tournament_id) REFERENCES tournaments(id),
+                CONSTRAINT team_id_fk FOREIGN KEY(team_id) REFERENCES teams(id),
+                CONSTRAINT unique_players_name UNIQUE (name)
             )
 
             CREATE TABLE users (
